@@ -28,7 +28,7 @@ function playRound(userChoice){
         console.log(winQuote)
         return winQuote;
     } else {
-        console.log("You lost!")
+        console.log(loseQuote)
         return loseQuote;
     }
 };
@@ -44,14 +44,14 @@ function calculateScore(score,result){
     if (result === winQuote) {
         score.user += 1;    
     } else if (result === loseQuote) {
-        score.computer +=1;
+        score.computer += 1;
     }
 };
 
 function showScore(score) {
-    console.log(`The current score is \n
-                     ${score.user} wins to the user and\n
-                     ${score.computer} to the human`)
+    console.log(`The current score is 
+                     ${score.user} wins to the user and
+                     ${score.computer} to the computer`);
 };
 
 //GLOBAL VARIABLES
@@ -61,7 +61,8 @@ let score = {
 }; 
 
 //let the css load
-setInterval(100); 
+setInterval(100);
+
 while (keepPlaying()) {
     userChoice = prompt("Please type \"rock\", \"paper\" or \"scissor\"");
     result = playRound(userChoice.toLowerCase());
