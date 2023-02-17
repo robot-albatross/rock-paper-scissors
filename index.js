@@ -20,25 +20,36 @@ function userWon(userChoice,computerChoice){
 
 function playRound(userChoice){
     const computerChoice = getComputerChoice();
-    console.log(`The computer chose ${computerChoice}!`,)
+
+    function gameEndMessage(currentGameQuote) {
+        if (document.querySelector(".gameResult")) {
+            document.body.removeChild(document.querySelector(".gameResult"));
+        }
+
+        let quote = document.createElement("div");
+        quote.classList.add("gameResult"); 
+        quote.textContent = `The computer chose ${computerChoice}! ${currentGameQuote}`;
+        document.body.appendChild(quote);
+    };
+
     if (userChoice === computerChoice) {
-        console.log(drawQuote)
+        gameEndMessage(drawQuote);
         return drawQuote;
     } else if (userWon(userChoice, computerChoice)){
-        console.log(winQuote)
+        gameEndMessage(winQuote);
         return winQuote;
     } else {
-        console.log(loseQuote)
+        gameEndMessage(loseQuote);
         return loseQuote;
     }
 };
 
-function keepPlaying(){
-    answer = prompt("Wanna keep playing, type \"Yes\" or \"No\"?\n (If you don't, the score will be erased)")
-    if (answer.toLowerCase() === "yes"){
-        return true;
-    }
-}
+//function keepPlaying(){
+//    answer = prompt("Wanna keep playing, type \"Yes\" or \"No\"?\n (If you don't, the score will be erased)")
+//    if (answer.toLowerCase() === "yes"){
+//        return true;
+//    }
+//}
 
 function calculateScore(score,result){
     if (result === winQuote) {
@@ -50,8 +61,8 @@ function calculateScore(score,result){
 
 function showScore(score) {
     console.log(`The current score is 
-                     ${score.user} wins to the user and
-                     ${score.computer} to the computer`);
+    ${score.user} wins to the user and 
+    ${score.computer} to the computer`);
 };
 
 //GLOBAL VARIABLES
@@ -60,12 +71,34 @@ let score = {
     computer: 0
 }; 
 
+//MAIN
+
 //let the css load
 setInterval(100);
 
-while (keepPlaying()) {
-    userChoice = prompt("Please type \"rock\", \"paper\" or \"scissor\"");
-    result = playRound(userChoice.toLowerCase());
-    calculateScore(score,result);
-    showScore(score);
-}
+//while (keepPlaying()) {
+    //userChoice = prompt("Please type \"rock\", \"paper\" or \"scissor\"");
+
+    //select buttons
+    rock = document.querySelector(".rock");
+    scissor = document.querySelector(".scissor");
+    paper = document.querySelector(".paper");
+
+    options = [rock,scissor,paper];
+    messages = ["rock","scissor","paper"];
+    userChoice = "";
+
+    function playGame(options,messages) {
+        for (let i = 0; i < options.length; i++) {
+            options[i].addEventListener("click", (e) => {
+                
+                userChoice = messages[i];
+                let result = playRound(userChoice.toLowerCase());
+                calculateScore(score,result);
+                showScore(score);
+            });
+        }
+    }
+
+    playGame(options,messages);
+//}
