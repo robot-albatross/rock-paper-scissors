@@ -76,22 +76,23 @@ let score = {
 //let the css load
 setInterval(100);
 
-//while (keepPlaying()) {
-    //userChoice = prompt("Please type \"rock\", \"paper\" or \"scissor\"");
+options = [];
+messages = ["rock","scissor","paper"];
+userChoice = "";
 
-    //select buttons
-    rock = document.querySelector(".rock");
-    scissor = document.querySelector(".scissor");
-    paper = document.querySelector(".paper");
+startButton = document.querySelector(".start-button");
+startButton.addEventListener("click", (e) => {
+    document.body.removeChild(startButton);
+    for (let i = 0; i < messages.length; i++) {
+        options.push(document.createElement("button"));
+        options[i].classList.add(messages[i]);
+        options[i].textContent = messages[i];
+        document.body.appendChild(options[i]);
+    }
 
-    options = [rock,scissor,paper];
-    messages = ["rock","scissor","paper"];
-    userChoice = "";
-
-    function playGame(options,messages) {
+    function playGame() {
         for (let i = 0; i < options.length; i++) {
             options[i].addEventListener("click", (e) => {
-                
                 userChoice = messages[i];
                 let result = playRound(userChoice.toLowerCase());
                 calculateScore(score,result);
@@ -100,5 +101,5 @@ setInterval(100);
         }
     }
 
-    playGame(options,messages);
-//}
+    playGame();
+});
