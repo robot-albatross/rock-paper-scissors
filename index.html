@@ -8,10 +8,29 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <button class="start-button"> Start game</button>
-    <!-- <button class="rock">Rock</button>
-    <button class="scissor">Scissor</button>
-    <button class="paper">Paper</button> -->
+    <button class="startCutscene">Start the game</button>
+
+    <div class="cutscene">
+        <div class="dialogue-box vegetaBox">
+            <img class="character" src="images/vegeta.jpg" alt="goku">
+            <div class="dialogue">RADAH RADAH PRINCE OF ALL SAIYANS RADAH RADAH!</div>
+        </div>
+        <div class="dialogue-box gokuBox">
+            <img class="character" src="images/goku.webp" alt="goku">
+            <div class="dialogue">HEY, IT'S ME, GOKU!</div>
+        </div>
+    </div>
+
+    <div class="game">
+        <div class="gameContent">
+            <div class="gameBox">
+                <button class="start-button"> Start game</button>
+            </div>
+            <div class="results"></div>
+        </div>
+    </div>
+
+    <audio class="theme" src="audio/dragonball.mp3"></audio>
 </body>
 <script src="index.js"></script>
 </html>

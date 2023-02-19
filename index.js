@@ -1,9 +1,16 @@
-//CONSTANTS
+//GAME CONSTANTS
 const drawQuote = "Draw!";
 const winQuote = "You won!";
 const loseQuote = "You lost!";
 
-//FUNCTIONS
+//GAME VARIABLES
+let score = {
+    user: 0,
+    computer: 0,
+    games: 0
+}; 
+
+//GAME LOGIC FUNCTIONS
 function getComputerChoice(){
     const options = ["rock","paper","scissor"];
     return options[Math.floor(Math.random()*3)];
@@ -21,35 +28,33 @@ function userWon(userChoice,computerChoice){
 function playRound(userChoice){
     const computerChoice = getComputerChoice();
 
-    function gameEndMessage(currentGameQuote) {
+    function insertResultMessage(currentGameQuote) {
+        gameContent = document.querySelector(".gameContent");
+
         if (document.querySelector(".gameResult")) {
-            document.body.removeChild(document.querySelector(".gameResult"));
+            gameContent.removeChild(document.querySelector(".gameResult"));
         }
 
-        let quote = document.createElement("div");
-        quote.classList.add("gameResult"); 
-        quote.textContent = `The computer chose ${computerChoice}! ${currentGameQuote}`;
-        document.body.appendChild(quote);
+        let message = document.createElement("div");
+        message.classList.add("gameResult"); 
+        message.textContent = `The computer chose ${computerChoice}! ${currentGameQuote}`;
+        gameContent.appendChild(message);
+
+        message = document.querySelector(".gameResult");
+        message.style.alignSelf = "flex-end";
     };
 
     if (userChoice === computerChoice) {
-        gameEndMessage(drawQuote);
+        insertResultMessage(drawQuote);
         return drawQuote;
     } else if (userWon(userChoice, computerChoice)){
-        gameEndMessage(winQuote);
+        insertResultMessage(winQuote);
         return winQuote;
     } else {
-        gameEndMessage(loseQuote);
+        insertResultMessage(loseQuote);
         return loseQuote;
     }
 };
-
-//function keepPlaying(){
-//    answer = prompt("Wanna keep playing, type \"Yes\" or \"No\"?\n (If you don't, the score will be erased)")
-//    if (answer.toLowerCase() === "yes"){
-//        return true;
-//    }
-//}
 
 function calculateScore(score,result){
     if (result === winQuote) {
@@ -59,47 +64,109 @@ function calculateScore(score,result){
     }
 };
 
-function showScore(score) {
-    console.log(`The current score is 
-    ${score.user} wins to the user and 
-    ${score.computer} to the computer`);
-};
+let cutsceneButton = document.querySelector(".startCutscene");
+cutsceneButton.addEventListener ("click", (e) => {
+    //stop window.addEventListener activation
+    e.stopPropagation();
 
-//GLOBAL VARIABLES
-let score = {
-    user: 0,
-    computer: 0
-}; 
+    function cutscene() {
 
-//MAIN
+        function startSoundtrack() {
+            audio = document.querySelector(".theme");
+            audio.volume = 0.2;
+            audio.play();
+        }
+    
+        function startCutscene() {
+            document.body.removeChild(cutsceneButton);
+            document.body.style.backgroundImage = "url(\"images/dbzwastelands.png\")";
+            let cutscene = document.querySelector(".cutscene");
+            cutscene.style.display = "flex";
+        }
+    
+        function conversation() {
+            let vegetaDialogue = document.querySelector(".vegetaBox > .dialogue");
+        
+            let gokuBox = document.querySelector(".gokuBox");
+            let gokuDialogue = document.querySelector(".gokuBox > .dialogue");
+            let gokuIcon = document.querySelector("gokuBox > .character");
+        
+            let filter = document.createElement("div");
+            filter.classList.add("filter");
+        
+            window.addEventListener("click", function eventHandler(e) {
+                e.stopImmediatePropagation();
+                gokuBox.appendChild(filter);
+                vegetaDialogue.textContent = "It's over Kakarot, give me dragon son";
+                this.removeEventListener("click",eventHandler);
+            });
+    
+            window.addEventListener("click", function eventHandler(e) {
+                let cutscene = document.querySelector(".cutscene");
+                cutscene.style.display = "none";
+            });
+        }
 
-//let the css load
-setInterval(100);
-
-options = [];
-messages = ["rock","scissor","paper"];
-userChoice = "";
-
-startButton = document.querySelector(".start-button");
-startButton.addEventListener("click", (e) => {
-    document.body.removeChild(startButton);
-    for (let i = 0; i < messages.length; i++) {
-        options.push(document.createElement("button"));
-        options[i].classList.add(messages[i]);
-        options[i].textContent = messages[i];
-        document.body.appendChild(options[i]);
+        startSoundtrack();
+        startCutscene();
+        conversation();
     }
+    
+
+    cutscene();
+
+    //GAME STARTS
+    function makeGameArea() {
+        game = document.querySelector(".game");
+        game.style.display = "flex"
+    }
+
+    makeGameArea();
+
+    startButton = document.querySelector(".start-button");
+    startButton.addEventListener("click", (e) => {
+        
+        let options = [];
+        const messages = ["rock","scissor","paper"];
+        let userChoice = "";
+
+        function insertGameButtons() {
+            gameBox = document.querySelector(".gameBox");
+            let gameDiv = document.createElement("div");
+            gameBox.appendChild(gameDiv);
+            gameBox.removeChild(startButton);
+            for (let i = 0; i < messages.length; i++) {
+                options.push(document.createElement("button"));
+                options[i].classList.add(messages[i]);
+                options[i].textContent = messages[i];
+                gameDiv.appendChild(options[i]);
+            }
+        }
 
     function playGame() {
         for (let i = 0; i < options.length; i++) {
-            options[i].addEventListener("click", (e) => {
+            options[i].addEventListener("click", (e) => {                
                 userChoice = messages[i];
-                let result = playRound(userChoice.toLowerCase());
+                let result = playRound(userChoice.toLowerCase(),gameBox);
                 calculateScore(score,result);
-                showScore(score);
-            });
-        }
-    }
+                
+                if (result !== drawQuote) {
+                    score.games += 1;
+                    }
 
-    playGame();
+                if (score.games === 5) {
+                    gameContent.innerHTML = "";
+                    text =  `The current score is 
+                    ${score.user} wins to the user and 
+                    ${score.computer} to the computer`;
+                    gameContent.textContent = text;
+                    }
+
+                });
+            }
+        }
+        insertGameButtons();
+        playGame();
+    });
 });
+
