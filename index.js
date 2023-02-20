@@ -38,10 +38,12 @@ function playRound(userChoice){
         let message = document.createElement("div");
         message.classList.add("gameResult"); 
         message.textContent = `The computer chose ${computerChoice}! ${currentGameQuote}`;
-        gameContent.appendChild(message);
+        //makes the text blink
+        setTimeout(function () {gameContent.appendChild(message)},10);
+        
 
-        message = document.querySelector(".gameResult");
-        message.style.alignSelf = "flex-end";
+        //message = document.querySelector(".gameResult");
+        //message.style.alignSelf = "flex-end";
     };
 
     if (userChoice === computerChoice) {
@@ -85,6 +87,7 @@ cutsceneButton.addEventListener ("click", (e) => {
         }
     
         function conversation() {
+            let vegetaBox = document.querySelector(".vegetaBox");
             let vegetaDialogue = document.querySelector(".vegetaBox > .dialogue");
         
             let gokuBox = document.querySelector(".gokuBox");
@@ -93,14 +96,30 @@ cutsceneButton.addEventListener ("click", (e) => {
         
             let filter = document.createElement("div");
             filter.classList.add("filter");
-        
-            window.addEventListener("click", function eventHandler(e) {
-                e.stopImmediatePropagation();
-                gokuBox.appendChild(filter);
-                vegetaDialogue.textContent = "It's over Kakarot, give me dragon son";
-                this.removeEventListener("click",eventHandler);
-            });
-    
+            
+            function sayLine(talker,listener,message) {
+                window.addEventListener("click", function eventHandler(e) {
+                    e.stopImmediatePropagation();
+                    //if (document.querySelector(".filter")) {listener.removeChild(filter);}
+                    listener.appendChild(filter);
+                    talker.textContent = message;
+                    this.removeEventListener("click",eventHandler);
+                });    
+            }
+
+            sayLine(vegetaDialogue,gokuBox,"RADAH RADAH PRINCE OF ALL SAIYANS RADAH RADAH!");
+            sayLine(vegetaDialogue,gokuBox,"It's over Kakarot, give me dragon son");
+            sayLine(gokuDialogue,vegetaBox,"Stop Vegeta! I will never let you destroy my plant!");
+            sayLine(vegetaDialogue,gokuBox,"You have no choice, im elite saiyan!");
+            sayLine(gokuDialogue,vegetaBox,"Hey, it's me Goku!");
+            sayLine(vegetaDialogue,gokuBox,"Your tricks are not gonna work on me!");
+            sayLine(vegetaDialogue,gokuBox,"Besides, i have something you don't, my buddy Nappa!");
+            sayLine(gokuDialogue,vegetaBox,"Oh no, all my dragon friends have been murdered (in minecraft)");
+            sayLine(gokuDialogue,vegetaBox,`But hey, i have an idea, you there, yeah you, hey it's me Goku, and i need you to do me a solid,` +
+            `I need you to distract Nappa, by playing rock paper and scissors with him so i can defeat Vegeta.
+             Can you do that? Great! Good luck out there!`);
+
+
             window.addEventListener("click", function eventHandler(e) {
                 let cutscene = document.querySelector(".cutscene");
                 cutscene.style.display = "none";
@@ -155,13 +174,17 @@ cutsceneButton.addEventListener ("click", (e) => {
                     }
 
                 if (score.games === 5) {
-                    gameContent.innerHTML = "";
-                    text =  `The current score is 
-                    ${score.user} wins to the user and 
-                    ${score.computer} to the computer`;
-                    gameContent.textContent = text;
-                    }
 
+                    function finalMessage() {
+                        gameContent.innerHTML = "";
+                        text =  `The current score is 
+                        ${score.user} wins to the user and 
+                        ${score.computer} to the computer`;
+                        gameContent.textContent = text;
+                        }
+                        //so the final message can clean the screen on the right time after 5 rounds, not before nor after
+                        setTimeout(function() {finalMessage()},100);
+                    }
                 });
             }
         }
