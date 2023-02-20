@@ -119,10 +119,17 @@ cutsceneButton.addEventListener ("click", (e) => {
             `I need you to distract Nappa, by playing rock paper and scissors with him so i can defeat Vegeta.
              Can you do that? Great! Good luck out there!`);
 
+             function makeGameArea() {
+                game = document.querySelector(".game");
+                game.style.display = "flex"
+            }
 
             window.addEventListener("click", function eventHandler(e) {
+                e.stopImmediatePropagation();
                 let cutscene = document.querySelector(".cutscene");
                 cutscene.style.display = "none";
+                makeGameArea();
+                this.removeEventListener("click",eventHandler);
             });
         }
 
@@ -135,12 +142,6 @@ cutsceneButton.addEventListener ("click", (e) => {
     cutscene();
 
     //GAME STARTS
-    function makeGameArea() {
-        game = document.querySelector(".game");
-        game.style.display = "flex"
-    }
-
-    makeGameArea();
 
     startButton = document.querySelector(".start-button");
     startButton.addEventListener("click", (e) => {
